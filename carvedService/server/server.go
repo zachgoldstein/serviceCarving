@@ -2,7 +2,6 @@ package server
 
 import (
 	"context"
-	"fmt"
 	"math/rand"
 	"sync"
 	"time"
@@ -30,7 +29,6 @@ func (s *Server) Count(ctx context.Context, times *pb.Times) (*pb.Sum, error) {
 
 	jobSize := 10000
 	numJobs := int(times.Times) / jobSize
-	fmt.Printf("Starting %d jobs of size %d \n", numJobs, jobSize)
 	for w := 0; w < numJobs; w++ {
 		wg.Add(1)
 		go func() {
@@ -46,7 +44,6 @@ func (s *Server) Count(ctx context.Context, times *pb.Times) (*pb.Sum, error) {
 		}()
 	}
 	wg.Wait()
-	fmt.Printf("finished counting %d returning \n", numJobs)
 
 	return &pb.Sum{
 		Sum: totalSum,

@@ -8,7 +8,7 @@ app.get('/', (req, res) => {
 app.get('/intensive', (req, res) => {
   // Calculate the sum of lots of random numbers
   let sum = 0
-  const timesToIterate = 1000000
+  const timesToIterate = 10000000000
   for (var i = 1; i <= timesToIterate; i++) {
    sum += Math.round(Math.random() * 100)
   }

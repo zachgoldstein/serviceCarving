@@ -11,4 +11,4 @@ scenarios:
       - post:
           url: "/Count"
           json:
-            times: 1000000
+            times: 10000000000
