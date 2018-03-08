@@ -41,8 +41,8 @@ func (s *Server) Count(ctx context.Context, times *pb.Times) (*pb.Sum, error) {
 	// totalSum := int32(0)
 	wg := &sync.WaitGroup{}
 
-	jobSize := 100000
-	numWorkers := 10
+	jobSize := 200000
+	numWorkers := 5
 	countMutex := &countMutex{
 		mu:    &sync.Mutex{},
 		count: 0,
