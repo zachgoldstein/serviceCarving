@@ -27,7 +27,7 @@ func (s *Server) Count(ctx context.Context, times *pb.Times) (*pb.Sum, error) {
 	mutex := &sync.Mutex{}
 	wg := &sync.WaitGroup{}
 
-	jobSize := 10000
+	jobSize := 100
 	numJobs := int(times.Times) / jobSize
 	for w := 0; w < numJobs; w++ {
 		wg.Add(1)
