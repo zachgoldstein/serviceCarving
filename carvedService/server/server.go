@@ -2,7 +2,10 @@ package server
 
 import (
 	"context"
+	"fmt"
 	"math/rand"
+	"sync"
+	"time"
 
 	pb "github.com/zachgoldstein/serviceCarving/carvedService/rpc"
 )
@@ -15,14 +18,37 @@ func NewServer() *Server {
 	return &Server{}
 }
 
+type job struct {
+	times int
+}
+
 // Count finds the sum of random numbers added together N times
 func (s *Server) Count(ctx context.Context, times *pb.Times) (*pb.Sum, error) {
-	sum := int32(0)
-	for i := 0; i <= int(times.Times); i++ {
-		sum += rand.Int31n(100)
+	totalSum := int32(0)
+	mutex := &sync.Mutex{}
+	wg := &sync.WaitGroup{}
+
+	jobSize := 10000
+	numJobs := int(times.Times) / jobSize
+	fmt.Printf("Starting %d jobs of size %d \n", numJobs, jobSize)
+	for w := 0; w < numJobs; w++ {
+		wg.Add(1)
+		go func() {
+			sum := int32(0)
+			r := rand.New(rand.NewSource(time.Now().Unix()))
+			for i := 0; i <= jobSize; i++ {
+				sum += r.Int31n(100)
+			}
+			mutex.Lock()
+			totalSum += sum
+			mutex.Unlock()
+			wg.Done()
+		}()
 	}
+	wg.Wait()
+	fmt.Printf("finished counting %d returning \n", numJobs)
 
 	return &pb.Sum{
-		Sum: sum,
+		Sum: totalSum,
 	}, nil
 }

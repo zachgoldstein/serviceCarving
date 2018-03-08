@@ -1,5 +1,7 @@
 package main
 
+import _ "net/http/pprof"
+
 import (
 	"fmt"
 	"log"
@@ -11,6 +13,10 @@ import (
 
 func main() {
 	fmt.Printf("Superfast Counting Service running on :6666")
+
+	go func() {
+		log.Println(http.ListenAndServe("localhost:8080", nil))
+	}()
 
 	server := server.NewServer()
 	twirpHandler := rpc.NewCarvedServer(server, nil)
