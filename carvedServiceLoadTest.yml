@@ -1,0 +1,14 @@
+config:
+  target: "http://localhost:6666/twirp/twirp.carved.Carved"
+  defaults:
+    - Content-Type: "application/json"
+  phases:
+    - duration: 60
+      arrivalRate: 20
+scenarios:
+  - name: "Count random numbers"
+    flow:
+      - post:
+          url: "/Count"
+          json:
+            times: 1000000

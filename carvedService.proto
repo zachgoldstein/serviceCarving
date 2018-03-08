@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package twirp.carved;
+option go_package = "rpc";
+
+// Carved service counts numbers very quickly.
+service Carved {
+  rpc Count(Times) returns (Sum);
+}
+
+message Times {
+  int32 times = 1; // must be > 0
+}
+
+message Sum {
+  int32 Sum = 1;
+}
