@@ -3,7 +3,7 @@ config:
   defaults:
     - Content-Type: "application/json"
   phases:
-    - duration: 60
+    - duration: 10
       arrivalRate: 20
 scenarios:
   - name: "Count random numbers"
@@ -11,4 +11,4 @@ scenarios:
       - post:
           url: "/Count"
           json:
-            times: 10000000000
+            times: 10000000
