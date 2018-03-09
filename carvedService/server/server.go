@@ -26,7 +26,7 @@ func CountWorker(count *countMutex, wg *sync.WaitGroup, jobChan <-chan int) {
 	r := rand.New(rand.NewSource(time.Now().Unix()))
 	for j := range jobChan {
 		sum := int32(0)
-		for i := 0; i <= j; i++ {
+		for i := 0; i < j; i++ {
 			sum += r.Int31n(100)
 		}
 		count.mu.Lock()
@@ -41,7 +41,7 @@ func (s *Server) Count(ctx context.Context, times *pb.Times) (*pb.Sum, error) {
 	// totalSum := int32(0)
 	wg := &sync.WaitGroup{}
 
-	jobSize := 200000
+	jobSize := 100000
 	numWorkers := 5
 	countMutex := &countMutex{
 		mu:    &sync.Mutex{},
@@ -53,26 +53,16 @@ func (s *Server) Count(ctx context.Context, times *pb.Times) (*pb.Sum, error) {
 	}
 
 	numJobs := int(times.Times) / jobSize
+	if jobSize > int(times.Times) {
+		numJobs = 1
+		jobSize = int(times.Times)
+	}
+
 	for w := 0; w < numJobs; w++ {
 		wg.Add(1)
 		jobChan <- jobSize
 	}
 	close(jobChan)
-
-	// for w := 0; w < numJobs; w++ {
-	// 	wg.Add(1)
-	// 	go func() {
-	// 		sum := int32(0)
-	// 		r := rand.New(rand.NewSource(time.Now().Unix()))
-	// 		for i := 0; i <= jobSize; i++ {
-	// 			sum += r.Int31n(100)
-	// 		}
-	// 		mutex.Lock()
-	// 		totalSum += sum
-	// 		mutex.Unlock()
-	// 		wg.Done()
-	// 	}()
-	// }
 	wg.Wait()
 
 	return &pb.Sum{
