@@ -1,7 +1,7 @@
 # Service Carving
 <img align="right" width="200" src="https://i.imgur.com/XVG2Gd7.png">
 
-This is demonstration repo to show how to carve away a high-performance golang service from a standard node app using protobuf and twirp, an RPC system.
+This is a demonstration repo to illustrate how to carve away a high-performance golang service from a standard node app using protobuf and twirp, an RPC system.
 
 Some major benefits of doing this:
   - It scales a system cleanly across many cores, more fully utilising larger machines.
